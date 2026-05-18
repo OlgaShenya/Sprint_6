@@ -2,6 +2,7 @@ from pages.base_page import BasePage
 from locators.important_questions_locators import ImportantQuestionsLocators
 from data import FAQData
 import allure
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
 class MainPage(BasePage):
@@ -77,3 +78,22 @@ class MainPage(BasePage):
             "actual": actual,
             "expected": expected,
         }
+
+    @allure.step("Переключение на новую вкладку")
+    def switch_tab_if_needed(self, opens_new_tab, initial_count):
+        """Тонкая обёртка: вызывает переключение только если сценарий требует новой вкладки."""
+        if opens_new_tab:
+            self.wait_for_new_window_and_load(initial_count=initial_count)
+
+    @allure.step("Поиск первого видимого элемента из списка")
+    def find_first_displayed_element(self, locators, timeout = 10):
+        """Ищет первый видимый элемент из списка. Делегирует ожидание видимости в BasePage."""
+        for loc in locators:
+            try:
+                self.wait_for_element_located(loc, timeout)
+                elem = self.driver.find_element(*loc)
+                self.wait_for_element_visible(elem, timeout)
+                return elem
+            except (TimeoutException, NoSuchElementException):
+                continue
+        return None
