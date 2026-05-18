@@ -3,7 +3,7 @@ import allure
 from data import FAQData
 
 
-@pytest.mark.usefixtures("driver", "main_page")
+@pytest.mark.usefixtures("main_page")
 class TestImportantQuestions:
 
     @allure.title('FAQ: вопрос раскрывается и ответ становится видимым')
@@ -12,8 +12,8 @@ class TestImportantQuestions:
         'Текст ответа не проверяется.'
     )
     @pytest.mark.parametrize("q_index", range(8), ids=[f"Question_{i}" for i in range(8)])
-    def test_question_opens_and_shows_answer_ui(self, q_index, driver, main_page):
-        driver.refresh()
+    def test_question_opens_and_shows_answer_ui(self, q_index, main_page):
+        main_page.refresh_page()
         main_page.wait_for_accordion_loaded()
         open_result = main_page.ensure_question_is_opened(q_index)
         assert open_result["is_expanded"] and open_result["is_answer_visible"], (
@@ -26,8 +26,8 @@ class TestImportantQuestions:
         'Проверяет контент: текст раскрытого ответа строго соответствует FAQData.ANSWERS.'
     )
     @pytest.mark.parametrize("q_index", range(8), ids=[f"Question_{i}" for i in range(8)])
-    def test_answer_text_matches_expected(self, q_index, driver, main_page):
-        driver.refresh()
+    def test_answer_text_matches_expected(self, q_index, main_page):
+        main_page.refresh_page()
         main_page.wait_for_accordion_loaded()
         main_page.ensure_question_is_opened(q_index)
         actual = main_page.get_answer_text(q_index)
@@ -45,8 +45,8 @@ class TestImportantQuestions:
     )
     @pytest.mark.parametrize("open_first, open_second, check_closed", [
         (0, 1, 0), (1, 2, 1)], ids=["переход_0-1", "переход_1-2"])
-    def test_opening_new_question_closes_previous(self, open_first, open_second, check_closed, driver, main_page):
-        driver.refresh()
+    def test_opening_new_question_closes_previous(self, open_first, open_second, check_closed, main_page):
+        main_page.refresh_page()
         main_page.wait_for_accordion_loaded()
         main_page.show_answer(open_first)
         main_page.show_answer(open_second)

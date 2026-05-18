@@ -80,10 +80,10 @@ class MainPage(BasePage):
         }
 
     @allure.step("Переключение на новую вкладку")
-    def switch_tab_if_needed(self, opens_new_tab, initial_count):
+    def switch_tab_if_needed(self, opens_new_tab):
         """Тонкая обёртка: вызывает переключение только если сценарий требует новой вкладки."""
         if opens_new_tab:
-            self.wait_for_new_window_and_load(initial_count=initial_count)
+            self.wait_for_new_window_and_load(initial_count=1) # исходное количество вкладок 1, ждем когда станет больше
 
     @allure.step("Поиск первого видимого элемента из списка")
     def find_first_displayed_element(self, locators, timeout = 10):

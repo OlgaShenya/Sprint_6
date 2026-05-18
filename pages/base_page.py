@@ -24,6 +24,12 @@ class BasePage:
             element
         )
 
+    def refresh_page(self):
+        self.driver.refresh()
+
+    def find_element(self, locator):
+        return self.driver.find_element(*locator)
+
     @allure.step("Принять куки, если баннер отображается")
     def accept_cookies_if_present(self):
         from locators.main_locators import MainLocators

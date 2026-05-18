@@ -3,7 +3,7 @@ import allure
 from locators.order_locators import OrderLocators
 
 
-@pytest.mark.usefixtures("driver", "order_page")
+@pytest.mark.usefixtures("order_page")
 class TestOrderPage:
 
     @allure.title('Позитивный сценарий заказа самоката')
@@ -20,7 +20,7 @@ class TestOrderPage:
         ],
         ids=["top_button", "bottom_button"]
     )
-    def test_order_success(self, driver, order_page, order_button, name, surname,
+    def test_order_success(self, order_page, order_button, name, surname,
                            address, metro, phone, date, duration, color, comment):
         order_page.click_element(order_button)
         order_page.fill_personal_info(name, surname, address, metro, phone)
@@ -28,6 +28,6 @@ class TestOrderPage:
         order_page.fill_rent_info(date, duration, color, comment)
         order_page.click_order()
         order_page.confirm_order()
+        modal = order_page.find_element(OrderLocators.ORDER_MODAL)
+        assert modal is not None and modal.is_displayed(), "Модальное окно 'Заказ оформлен' не появилось"
 
-        modal = driver.find_element(*OrderLocators.ORDER_MODAL)
-        assert modal.is_displayed(), "Модальное окно 'Заказ оформлен' не появилось"
