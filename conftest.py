@@ -3,8 +3,7 @@ from selenium import webdriver
 from pages.base_page import BasePage
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
-
-BASE_URL = "https://qa-scooter.education-services.ru/"
+from url import BASE_URL
 
 
 @pytest.fixture(scope="class")
